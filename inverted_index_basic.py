@@ -22,7 +22,7 @@ def remove_duplicates(xs):
     return s
 
 
-def make_inv_index_as_dict(xs):
+def inv_index(xs):
     ls = []
     d = []
     t_el = xs[0][0]
@@ -61,6 +61,15 @@ def term_doc_id_list(xs):
     return ys
 
 
+def make_inverted_index(xs):
+    """Makes inverted index from list of
+    documents, working with RAM"""
+    docs = map(tokenize, xs)
+    docs = term_doc_id_list(docs)
+    docs = sorted(docs)
+    docs = remove_duplicates(docs)
+    return inv_index(docs)
+
 
 if __name__ == '__main__':
     doc = """I did enact Julius Caesar: I was killed
@@ -68,11 +77,8 @@ i’ the Capitol; Brutus killed me"""
     doc1 = """So let it be with Caesar.  The noble Brutus
 hath told you Caesar was ambitious"""
     docs = [doc, doc1]
-    docs = map(tokenize, docs)
-    docs = term_doc_id_list(docs)
-    docs = sorted(docs)
-    docs = remove_duplicates(docs)
-    print(make_inv_index_as_dict(docs))
+
+    print(make_inverted_index(docs))
 
 
 
