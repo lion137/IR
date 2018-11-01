@@ -1,8 +1,12 @@
 # Functions to operate on index, and logic to parse a boolean query
 
 from imports import *
+import main as mn
+import inverted_index_class as inv
 
 # boolean queries
+
+ind = mn.texts.data_index
 
 def union(p1, p2):
     return set(p1).union(set(p2))
@@ -10,7 +14,7 @@ def union(p1, p2):
 def intersect(p1, p2):
     return set(p1).intersection(set(p2))
 
-def not_(p, ind):
+def not_(p):
     return set(ind).difference(set(p))
 
 
@@ -92,9 +96,25 @@ implication = lambda x, y: op.or_(op.not_(x), y)
 equality = lambda x, y: op.and_(implication(x, y), implication(y, x))
 xor = lambda x, y: op.and_(op.or_(x, y), op.not_(op.and_(x, y)))
 
+# parsing input and evaluation functions
+def parse_word(w):
+    return mn.texts.get_postings(w)
 
-def build_parse_tree(exp):
+def parse_input(exp):
+    exp = exp.strip()
+    if exp.isalpha(): exp = "~~" + exp
     exp_list = exp.replace('(', ' ( ').replace(')', ' ) ').replace('~', ' ~ ').split()
+    for ind, e in enumerate(exp_list):
+        if   e == 'AND': exp_list[ind] = '&&'
+        if   e == 'OR':  exp_list[ind] = '||'
+        if   e == 'NOT': exp_list[ind] = '~'
+    return exp_list
+
+def eval_input(exp):
+    return evaluate_parse_tree(build_parse_tree(parse_input(exp)))
+
+def build_parse_tree(exp_list):
+    #exp_list = exp.replace('(', ' ( ').replace(')', ' ) ').replace('~', ' ~ ').split()
     e_tree = BinaryTree('')
     current_tree = e_tree
     for token in exp_list:
@@ -110,11 +130,6 @@ def build_parse_tree(exp):
                 current_tree.setRootVal(token)
                 current_tree.insertRight('')
                 current_tree = current_tree.getRightChild()
-        elif token in ['1', '0']:
-            current_tree.setRootVal(bool(int(token)))
-            current_tree = current_tree.getParent()
-            if current_tree.getRootVal() == '~':
-                current_tree = current_tree.getParent()
         elif token == '~':
             current_tree.setRootVal('~')
             current_tree.insertLeft('')
@@ -122,12 +137,15 @@ def build_parse_tree(exp):
         elif token == ')':
             current_tree = current_tree.getParent()
         else:
-            raise ValueError
+            current_tree.setRootVal(parse_word(token))  # was int(token)
+            current_tree = current_tree.getParent()
+            if current_tree.getRootVal() == '~':
+                current_tree = current_tree.getParent()
     return e_tree
 
 
 def evaluate_parse_tree(tree):
-    opers = {'||': op.or_, '&&': op.and_, '~': op.not_, '->': implication, '==': equality, 'XR': xor}
+    opers = {'||': union, '&&': intersect, '~': not_, '->': implication, '==': equality, 'XR': xor}
     leftT = tree.getLeftChild()
     rightT = tree.getRightChild()
     if leftT and not rightT:

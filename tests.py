@@ -48,6 +48,12 @@ def test_get_postings():
     w = "the"
     assert mn.texts.get_postings(w) == [0, 2, 3]
 
-##
+## Input formula evaluation tests
+
+def test_eval_input():
+    assert eval_input(mn.form) == {0}
+
+def test_eval_input_single_word():
+    assert eval_input("the") == {0, 2, 3}
 
 
