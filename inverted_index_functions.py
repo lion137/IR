@@ -114,7 +114,6 @@ def eval_input(exp):
     return evaluate_parse_tree(build_parse_tree(parse_input(exp)))
 
 def build_parse_tree(exp_list):
-    #exp_list = exp.replace('(', ' ( ').replace(')', ' ) ').replace('~', ' ~ ').split()
     e_tree = BinaryTree('')
     current_tree = e_tree
     for token in exp_list:
@@ -136,11 +135,13 @@ def build_parse_tree(exp_list):
             current_tree = current_tree.getLeftChild()
         elif token == ')':
             current_tree = current_tree.getParent()
-        else:
+        elif token not in ['(', ')', '||', '&&', '->', '~', 'XR', '==']:
             current_tree.setRootVal(parse_word(token))  # was int(token)
             current_tree = current_tree.getParent()
             if current_tree.getRootVal() == '~':
                 current_tree = current_tree.getParent()
+        else:
+            raise ValueError
     return e_tree
 
 

@@ -1,5 +1,7 @@
 # tests
 
+from unittest.mock import patch
+import pytest
 from imports import *
 from texts import *
 from inverted_index_class import *
@@ -56,4 +58,15 @@ def test_eval_input():
 def test_eval_input_single_word():
     assert eval_input("the") == {0, 2, 3}
 
+## Test user input
 
+def test_enter_to_prompt_function():
+    assert eval_input("(the AND NOT(brexit OR NOT footballers))") == {0}
+    with pytest.raises(AttributeError):
+        eval_input("not the")
+
+@pytest.mark.parametrize ("arg, ret", [("(NOT countries AND NOT brexit)", {1, 3}),
+                                       ("NOT NOT the", {0, 2, 3}),
+                                       ()])
+def test_eval_input_parametrize(arg, ret):
+    assert eval_input(arg) == ret
