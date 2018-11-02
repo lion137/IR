@@ -8,3 +8,4 @@ search.py
 texts.py
 *.ipynb
 ht.html
+scrapper.py
