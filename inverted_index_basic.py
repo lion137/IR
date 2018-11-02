@@ -41,7 +41,6 @@ def inv_index(xs):
                 return d
             continue
         d.append([[t_el, t_f], ls])
-        #d.append([[xs[i][0], 1], [xs[i][1]]])
         ls =[]
         t_f = 0
         t_el = xs[i][0]

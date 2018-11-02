@@ -3,10 +3,12 @@
 from imports import *
 import main as mn
 import inverted_index_class as inv
-
+from texts import *
 # boolean queries
 
 ind = mn.texts.data_index
+
+
 
 def union(p1, p2):
     return set(p1).union(set(p2))
@@ -16,6 +18,17 @@ def intersect(p1, p2):
 
 def not_(p):
     return set(ind).difference(set(p))
+
+def d_dict(docs):
+    """Takes list of docs and their addresses and
+    returns the same list of documents and a dict with
+    strings 0, 1, 2 as keys and addresses """
+    limit = len(docs)
+    d = {}
+    address_dict = {}
+    for i in range(limit):
+        d[str(i)], address_dict[str(i)] = docs[i][0], docs[i][1]
+    return list(d.values()), address_dict
 
 
 # query parser
@@ -109,9 +122,11 @@ def parse_input(exp):
         if   e == 'OR':  exp_list[ind] = '||'
         if   e == 'NOT': exp_list[ind] = '~'
     return exp_list
+addresses_dict = d_dict(docs_tests)[1]
 
 def eval_input(exp):
-    return evaluate_parse_tree(build_parse_tree(parse_input(exp)))
+    s =  evaluate_parse_tree(build_parse_tree(parse_input(exp)))
+    return [addresses_dict[str(x)] for x in s]
 
 def build_parse_tree(exp_list):
     e_tree = BinaryTree('')
@@ -157,3 +172,8 @@ def evaluate_parse_tree(tree):
         return fn(evaluate_parse_tree(leftT), evaluate_parse_tree(rightT))
     else:
         return tree.getRootVal()
+
+
+
+
+
