@@ -1,3 +1,9 @@
 .idea/*
 .__pycha*/*
 *.txt
+inverted_index_functions.py
+old*
+main.py
+search.py
+texts.py
+*.ipynb
