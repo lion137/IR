@@ -53,8 +53,7 @@ def retrieve_text(link):
 
 
 if __name__ == '__main__':
-    print(extract_child_links('http://www.infor.pl/dziennik-ustaw/r2000/nr115'))
-    '''x = extract_child_links(retrieve_year_urls(2017)[1])[11]
-    #webbrowser.open(x)
-    ptags = retrieve_text("https://www.infor.pl/akt-prawny/DZU.2004.286.0002881,rozporzadzenie-ministra-finansow-w-sprawie-form-metod-trybu-i-warunkow-wykonywania-czynnosci-operacyjnorozpoznawczych-przez-organy-celne.html")
-    print(ptags, len(ptags))'''
+    a_list = [retrieve_year_urls(x) for x in range(2014, 2018)]
+    a_child_links = [extract_child_links(x) for x in a_list[1][:5]]
+    a_text = [retrieve_text(x) for x in a_child_links]
+    print(a_text[:10])

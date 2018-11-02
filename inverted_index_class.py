@@ -133,6 +133,7 @@ def d_dict(docs):
 addresses_dict = d_dict(docs_tests)[1] ##
 # parsing input and evaluation functions
 def parse_word(w):
+    """returns postings list of the word given"""
     return texts.get_postings(w)
 
 
@@ -190,7 +191,8 @@ def build_parse_tree(exp_list):
         elif token == ')':
             current_tree = current_tree.getParent()
         elif token not in ['(', ')', '||', '&&', '->', '~', 'XR', '==']:
-            current_tree.setRootVal(parse_word(token))  # was int(token)
+            current_tree.setRootVal(parse_word(token))
+            print("parsed token inside build here :", parse_word(token))
             current_tree = current_tree.getParent()
             if current_tree.getRootVal() == '~':
                 current_tree = current_tree.getParent()
@@ -225,3 +227,5 @@ all_postings = texts.data_index
 index_field = texts.index
 
 form = "(the AND NOT(brexit OR NOT footballers))"
+
+
