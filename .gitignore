@@ -1,6 +1,6 @@
 .idea/*
 .__pycha*/*
-*.txt
+texts.txt
 inverted_index_functions.py
 old*
 main.py
