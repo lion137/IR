@@ -1,2 +1,2 @@
-IR
-Simple IR project
+IR project,    
+Information retrieval from web data.    
