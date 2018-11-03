@@ -32,8 +32,25 @@ def retrieve_page_with_download(link):
     return [html_prep + x for x in re.findall(pattern, html_main)]
 
 
+def retrieve_download_link(link):
+    """:returns pdf download link"""
+    html_prep = "http://prawo.sejm.gov.pl"
+    resp = requests.get(link)
+    resp.raise_for_status()
+    html_m = resp.text
+    pattern = re.compile(r"/isap.nsf/download.xsp[A-Za-z0-9/]+\.pdf")
+    if not "uznany za uchylony" in ht:
+        link = re.findall(pattern, html_m)
+        try:
+            link = link[0]
+            return html_prep + re.findall(pattern, html_m)[0]
+        except Exception:
+            print("retrieve_download_link: no valid link on site")
+
+
 if __name__ == '__main__':
-    lin = retrieve_year_volumes_to_2011(1920)[:5]
-    print(lin)
-    print(retrieve_page_with_download(lin[1]))
-    print(len(retrieve_page_with_download(lin[1])))
+    lin = retrieve_year_volumes_to_2011(2010)[0]
+    link = retrieve_page_with_download(lin)
+    #print(lin)
+    #print(link)
+    print(retrieve_download_link(link[0]))

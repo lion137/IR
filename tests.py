@@ -2,6 +2,7 @@
 
 import pytest
 from inverted_index_class import *
+from download_data import *
 
 
 ## Test base query functions
@@ -81,3 +82,21 @@ def test_enter_to_prompt_function():
                                       ])
 def test_eval_input_parametrize(arg, ret):
     assert eval_input(arg) == ret
+
+def test_retrieve_years_urls():
+    assert retrieve_years_urls()[0] == 'http://prawo.sejm.gov.pl/isap.nsf/ByYear.xsp?type=WDU&year=1918'
+    assert retrieve_years_urls()[-1] == 'http://prawo.sejm.gov.pl/isap.nsf/ByYear.xsp?type=WDU&year=2018'
+
+def test_retrieve_year_volumes():
+    assert retrieve_year_volumes_to_2011(2011)[0] == 'http://prawo.sejm.gov.pl/isap.nsf/ByYear.xsp?type=WDU&year=2011&vol=1'
+    assert retrieve_year_volumes_to_2011(2011)[-1] == 'http://prawo.sejm.gov.pl/isap.nsf/ByYear.xsp?type=WDU&year=2011&vol=299'
+
+def test_retrieve_page_with_download():
+    assert retrieve_page_with_download(retrieve_year_volumes_to_2011(2010)[0])[0] == 'http://prawo.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20100010002'
+
+def test_retrieve_download_link():
+        lin = retrieve_year_volumes_to_2011(2010)[0]
+        link = retrieve_page_with_download(lin)
+        assert retrieve_download_link(link[0]) == 'http://prawo.sejm.gov.pl/isap.nsf/download.xsp/WDU20100010002/O/D20100002.pdf'
+
+
