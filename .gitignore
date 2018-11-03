@@ -9,3 +9,5 @@ texts.py
 *.ipynb
 ht.html
 scrapper.py
+irvenv
+temp*
